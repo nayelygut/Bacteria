@@ -81,23 +81,25 @@ function buildCharts(sample) {
     // 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order  
     //  so the otu_ids with the most bacteria are last. 
-    sortedOTU = otu_ids.sort((a,b) => b -a);
-    slicedOTU = otu_ids.slice(0,10);
+    // sortedOTU = otu_ids.sort((a,b) => b -a);
+
+    slicedOTU = otu_ids.slice(0,10).map(x => `OTU ${x}`).reverse();
     var yticks = slicedOTU;
+    console.log(yticks);
 
     // 8. Create the trace for the bar chart. 
     var barData = [{
-      x: sample_values,
+      x: sample_values.slice(0,10).reverse(),
       y : yticks,
+      text: otu_labels.slice(0,10).reverse(),
       type: "bar",
       orientation: "h"
     }];
     // 9. Create the layout for the bar chart. 
     var barLayout = {
+      title: "Belly Button Samples",
       xvalues: sample_values,
       yvalues: yticks,
-      title: "Belly Button Samples",
-      hovertext: "otu_labels",
       bargap :0.05
     };
     // 10. Use Plotly to plot the data with the layout. 
@@ -110,9 +112,10 @@ function buildCharts(sample) {
       text: otu_labels,
       mode: "markers",
       marker: {
-        size: [1000, 900, 800, 700, 600, 500, 400, 300, 200, 100],
-        color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)', 'rgb(44, 160, 101)', 'rgb(255, 65, 54)','rgb(93, 164, 214)', 'rgb(255, 144, 14)', 'rgb(44, 160, 101)', 'rgb(255, 65, 54)','rgb(93, 164, 214)', 'rgb(255, 144, 14)'],
-        sizemode: "area"}
+        size: sample_values,
+        color: otu_ids, 
+        colorscale: "Earth"
+      }
     }];
 
     // 2. Create the layout for the bubble chart.
@@ -130,11 +133,19 @@ function buildCharts(sample) {
     var gaugeData = [{
       domain: { x: [0, 1], y: [0, 1] },
       value: washing,
-      title: { text: "Bellybutton Washing Frequency" },
+      title: { text: "Belly Button Washing Frequency" },
       type: "indicator",
       mode: "gauge+number",
       gauge: {
-        axis: { range: [null, 10] }}
+        axis: { range: [null, 10] },
+        bar: { color: "black" },
+        steps: [
+          { range: [0, 2], color: "red" },
+          { range: [2, 4], color: "orange" },
+          { range: [4, 6], color: "yellow" },
+          { range: [6, 8], color: "limegreen" },
+          { range: [8, 10], color: "forestgreen" }
+          ]}
      } ];
     
     // 5. Create the layout for the gauge chart.
